@@ -5,11 +5,14 @@ import hello.itemservice.domain.item.ItemRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
 @Controller
 @RequestMapping("/basic/items")
 @RequiredArgsConstructor
@@ -24,9 +27,17 @@ public class BasicItemController {
     return "basic/items";
   }
 
+  @GetMapping("/{itemId}")
+  public String item(@PathVariable("itemId") long itemId, Model model) {
+    Item item = itemRepository.findById(itemId);
+    model.addAttribute("item", item);
+    return "basic/item";
+  }
+
   @PostConstruct
   public void init() {
     itemRepository.save(new Item("itemA", 10000, 100));
     itemRepository.save(new Item("itemB", 20000, 200));
   }
+
 }
